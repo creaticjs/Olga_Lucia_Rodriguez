@@ -1,0 +1,26 @@
+.hero-image img {  
+  max-height: 100vh;
+  object-fit: cover;
+  filter: grayscale(70%);  
+}
+.hero-image {    
+   position: relative;    
+}
+.overlay{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+}
+
+.overlay .container ,
+.overlay .row {
+    height: 100%
+}
+
+.overlay .container .row .btn{
+    margin-bottom: 10px    
+}
