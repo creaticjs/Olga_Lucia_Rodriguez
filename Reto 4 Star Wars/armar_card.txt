@@ -1,0 +1,84 @@
+// Creo la row y la columna
+    var row = document.createElement("div");    
+    row.setAttribute("class", "row");
+    var col = document.createElement("div");    
+    col.setAttribute("class", "col-sm-6");
+    // Creo la Card
+    var card = document.createElement("div");    
+    card.setAttribute("class", "card");
+    card.setAttribute("style", "width: 18rem;");
+    // Creo el card body
+    var card_body = document.createElement("div");
+    card_body.setAttribute("class", "card-body");
+    // Asigno el Titulo
+    var title = document.createElement("h5");
+    var title_text = document.createTextNode("Card title");
+    title.appendChild(title_text);
+    card.appendChild(title);
+    // Asigno el texto
+    var par = document.createElement("p");
+    var par_text = document.createTextNode("Some quick example text to build on the card title and make up the bulk of the card's content.");
+    par.appendChild(par_text);
+    card_body.appendChild(par);
+    // Agrego el card body a la card
+    card.appendChild(card_body);
+    // Agrego la nueva card al contenido del tab
+    var element = document.getElementById("films");
+    element.appendChild(card);
+    // Agrego la columna y el row al contenido del tab
+    element.appendChild(col);
+    element.appendChild(row);
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//console.log(datosCategoria);
+    var arrResults = datosCategoria.results;
+    console.log(datosCategoria.results);
+    arrResults.forEach(elem =>{
+        console.log(elem.title);
+        // Creo la row y la columna
+        var row = document.createElement("div");    
+        row.setAttribute("class", "row");
+        var col = document.createElement("div");    
+        col.setAttribute("class", "col-sm-6");
+        // Creo la Card
+        var card = document.createElement("div");    
+        card.setAttribute("class", "card");
+        //card.setAttribute("style", "width: 18rem;");        
+        // Asigno el Titulo
+        var title = document.createElement("h5");
+        var title_text = document.createTextNode(elem.title);
+        title.appendChild(title_text);
+        card.appendChild(title);
+        // Creo el card body
+        var card_body = document.createElement("div");
+        card_body.setAttribute("class", "card-body");
+        // Asigno el texto
+        var par = document.createElement("p");
+        var par_text = document.createTextNode(elem.opening_crawl);
+        par.appendChild(par_text);
+        card_body.appendChild(par);
+        // Agrego el card body a la card
+        card.appendChild(card_body);
+        // Agrego la nueva card al contenido del tab        
+        element.appendChild(card);
+        // Agrego la columna y el row al contenido del tab
+        element.appendChild(col);
+        element.appendChild(row);   
