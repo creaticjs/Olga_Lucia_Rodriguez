@@ -1,21 +1,19 @@
 var datosAPI={};
+var datosItem={};
 var objCat = {};
 
 
-function getRequestGit(link){
-    // armo la url del elemento seleccionado
-    var url = "https://swapi.co/api/";      
-    url = url + link +  "/";         
+function getRequestCat(url,cat){           
     var peticion  = new  XMLHttpRequest();
     peticion.onreadystatechange = function(){
-        if (this.readyState == 4 && this.status == 200) {
-            datosAPI = JSON.parse(this.responseText); 
+        if (this.readyState == 4 && this.status == 200) {            
+            datosAPI = JSON.parse(this.responseText);                         
             // Cargo las imagenes segun la categoria                   
-            cargarImgCat(datosAPI,link);
+            cargarImgCat(datosAPI,cat);
             //  y muestro el contenido en el tab actual 
-            mostrarTabs(link, datosAPI);                      
+            mostrarTabs(cat, datosAPI);                                              
         }
-    }
+    }    
     // Envio el request como metodo GET
     peticion.open('GET',url,true);
     peticion.send();        
@@ -23,7 +21,13 @@ function getRequestGit(link){
 
 
 function cargarImgCat(datosFilms, catImg){
-    var arrResults = datosFilms.results;
+    // Valido si me enviaron una categoria con resultados o un item final
+    var arrResults;
+    if (datosFilms.results) {
+        arrResults = datosFilms.results;
+    } else {
+        arrResults = datosFilms;
+    } 
     for (let index = 0; index < arrResults.length; index++) {
           objCat = arrResults[index];
           console.log(objCat);
@@ -34,5 +38,18 @@ function cargarImgCat(datosFilms, catImg){
           }
           
     }
+}
+
+function getRequestItem(url){
+           
+    var peticion  = new  XMLHttpRequest();
+    peticion.onreadystatechange = function(){
+        if (this.readyState == 4 && this.status == 200) {
+            datosItem = JSON.parse(this.responseText);                                                                                 
+        }
+    }    
+    // Envio el request como metodo GET
+    peticion.open('GET',url,true);
+    peticion.send();        
 }
 
