@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             jitem = element.getAttribute("href").substr(1);     
             // armo la url del elemento seleccionado    
             url = "https://swapi.co/api/" + jitem +  "/";                     
+            cargado = false;
             // llamo a obtener la info de la api con la url armada
             getRequestCat(url, jitem);                                 
         }
@@ -71,7 +72,7 @@ function mostrarCategoria(datosCategoria, htmlDivCategoria){
     row.setAttribute("class", "row");
     
     //Limpio el cuerpo de la tabla antes de cargar la nueva info
-    htmlDivCategoria.innerHTML = "";
+    //htmlDivCategoria.innerHTML = "";
     
     //Recorro el Array de Resultados creando la card
         arrResults.forEach(elem =>{

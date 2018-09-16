@@ -1,7 +1,7 @@
 var datosAPI={};
 var datosItem={};
 var objCat = {};
-
+var cargado = false;
 
 function getRequestCat(url,cat){           
     var peticion  = new  XMLHttpRequest();
@@ -11,14 +11,17 @@ function getRequestCat(url,cat){
             // Cargo las imagenes segun la categoria                   
             cargarImgCat(datosAPI,cat);
             //  y muestro el contenido en el tab actual 
-            mostrarTabs(cat, datosAPI);                                              
+            mostrarTabs(cat, datosAPI); 
+            if (datosAPI.next) {            
+                getRequestCat(datosAPI.next,cat); 
+                cargado = true;                                           
+            }                                             
         }
     }    
     // Envio el request como metodo GET
     peticion.open('GET',url,true);
     peticion.send();        
 }
-
 
 function cargarImgCat(datosFilms, catImg){
     // Valido si me enviaron una categoria con resultados o un item final
@@ -31,7 +34,7 @@ function cargarImgCat(datosFilms, catImg){
     for (let index = 0; index < arrResults.length; index++) {
           objCat = arrResults[index];
           console.log(objCat);
-          if (index <= 3) {
+          if (index <= 3 && !cargado) {
             objCat.srcImg = "./assets/" + catImg + "/" + index + ".png";            
           } else {
             objCat.srcImg = "./assets/" + catImg + "/" + "default.png";              
@@ -52,4 +55,3 @@ function getRequestItem(url){
     peticion.open('GET',url,true);
     peticion.send();        
 }
-
