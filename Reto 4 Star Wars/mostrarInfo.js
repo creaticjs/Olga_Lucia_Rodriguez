@@ -31,7 +31,9 @@ function mostrarTabs(item, datosAPI)
 {        
     switch(item) {
         case "films":            
-            //mostrarFilms(datosAPI);
+            //mostrarFilms(datosAPI);            
+            // Ordeno los resultados de la consulta            
+            datosAPI.results.sort(function(a, b){return a.episode_id - b.episode_id});
             mostrarCategoria(datosAPI,htmlDivFilms);            
             break;
         case "people":        
@@ -51,7 +53,7 @@ function mostrarTabs(item, datosAPI)
             mostrarCategoria(datosAPI,htmlDivVehicles);
             break;                
         default:
-            text = "I have never heard of that fruit...";
+            text = "I have never heard of that ...";
     }
 }
     
@@ -61,6 +63,7 @@ function mostrarCategoria(datosCategoria, htmlDivCategoria){
     console.log(datosCategoria);
     // Obtengo los resultados de la consulta
     var arrResults = datosCategoria.results;    
+
     console.log(datosCategoria.results);
     
     // Creo la row y la agrego al document
@@ -75,12 +78,13 @@ function mostrarCategoria(datosCategoria, htmlDivCategoria){
             //console.log(elem.name);
             // Creo la columna
             var col = document.createElement("div");    
-            col.setAttribute("class", "col-sm-6");
+            col.setAttribute("class", "col-sm-6");                                 
             // Creo la Card
             var card = document.createElement("div");    
-            card.setAttribute("class", "card mb-4 mt-4 ml-4 mr-4 mx-auto");                             
-            // Asigno el Titulo
+            card.setAttribute("class", "card border-danger mt-4 mx-auto");                             
+            // Asigno el Titulo            
             var title = document.createElement("h3");
+            title.setAttribute("class", "card-title mt-4 mx-auto");            
             var tituloCard;
             if (elem.name) {
                 tituloCard= elem.name;
@@ -95,13 +99,21 @@ function mostrarCategoria(datosCategoria, htmlDivCategoria){
             var card_body = document.createElement("div");
             card_body.setAttribute("class", "card-body");
 
+            // Asigno la imagen
+            var imag = document.createElement("img");
+            imag.setAttribute("class", "card-img-top mb-4");
+            imag.setAttribute("src", elem.srcImg);
+            imag.setAttribute("width", "80%");
+            imag.setAttribute("alt", "film image");
+            // Agrego la imagen al card body
+            card_body.appendChild(imag);  
             for (var i in elem) {
                 if (elem.hasOwnProperty(i)) {                                    
 
                     if (((elem[i]).toString().substr(0,4) != 'http') && i != 'srcImg')                    
                     {
                         // Asigno el Name Caption
-                        var objeto_cap = document.createElement("h4");
+                        var objeto_cap = document.createElement("h4");                        
                         var objeto_cap_text = document.createTextNode(i);
                         objeto_cap.appendChild(objeto_cap_text);
                         card_body.appendChild(objeto_cap);
@@ -115,17 +127,11 @@ function mostrarCategoria(datosCategoria, htmlDivCategoria){
                     
                 }
               }
-            // Asigno la imagen
-            var imag = document.createElement("img");
-            imag.setAttribute("class", "card-img-top");
-            imag.setAttribute("src", elem.srcImg);
-            imag.setAttribute("width", "80%");
-            imag.setAttribute("alt", "film image");
-             // Agrego la imagen al card body
-             card_body.appendChild(imag);             
+            
+            // Termino de Configurar la card           
             // Agrego el card body a la card
             card.appendChild(card_body);            
-            // Agrego la nueva card a la columna
+            // Agrego la nueva card a la columna            
             col.appendChild(card);
             // Agrego la columna al row
             row.appendChild(col);                    
