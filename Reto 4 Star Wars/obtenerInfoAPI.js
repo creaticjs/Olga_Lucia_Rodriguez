@@ -3,7 +3,7 @@ var datosItem={};
 var objCat = {};
 var cargado = false;
 
-function getRequestCat(url,cat){           
+function getRequestCat(url,cat){
     var peticion  = new  XMLHttpRequest();
     peticion.onreadystatechange = function(){
         if (this.readyState == 4 && this.status == 200) {            
@@ -13,7 +13,7 @@ function getRequestCat(url,cat){
             //  y muestro el contenido en el tab actual 
             mostrarTabs(cat, datosAPI); 
             if (datosAPI.next) {            
-                getRequestCat(datosAPI.next,cat); 
+                getRequestCat(datosAPI.next,cat);
                 cargado = true;                                           
             }                                             
         }
@@ -24,6 +24,7 @@ function getRequestCat(url,cat){
 }
 
 function cargarImgCat(datosFilms, catImg){
+    console.log("Cargando Imagenes Categoria ****************");
     // Valido si me enviaron una categoria con resultados o un item final
     var arrResults;
     if (datosFilms.results) {
@@ -33,7 +34,7 @@ function cargarImgCat(datosFilms, catImg){
     } 
     for (let index = 0; index < arrResults.length; index++) {
           objCat = arrResults[index];
-          console.log(objCat);
+          //console.log(objCat);
           if (index <= 3 && !cargado) {
             objCat.srcImg = "./assets/" + catImg + "/" + index + ".png";            
           } else {
@@ -43,15 +44,20 @@ function cargarImgCat(datosFilms, catImg){
     }
 }
 
-function getRequestItem(url){
-           
-    var peticion  = new  XMLHttpRequest();
-    peticion.onreadystatechange = function(){
-        if (this.readyState == 4 && this.status == 200) {
-            datosItem = JSON.parse(this.responseText);                                                                                 
+
+function getRequestPromise(url, cat){    
+    return new Promise(function(resolve, reject){
+        var httpX = new XMLHttpRequest();
+        httpX.onload = function(){
+            //console.log(this.responseText);
+            resolve(JSON.parse(this.responseText));            
         }
-    }    
-    // Envio el request como metodo GET
-    peticion.open('GET',url,true);
-    peticion.send();        
+        httpX.onerror = function(){
+            reject(Error("Error Cargando Categoria" + cat));
+        }
+        httpX.open('GET',url,true);
+        httpX.send()
+    });
 }
+
+

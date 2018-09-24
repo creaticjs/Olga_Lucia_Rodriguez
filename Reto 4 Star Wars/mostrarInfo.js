@@ -5,10 +5,12 @@ var htmlDivPlanets = document.getElementById("planets");
 var htmlDivSpecies = document.getElementById("species");
 var htmlDivStarships = document.getElementById("starships");
 var htmlDivVehicles = document.getElementById("vehicles");
-var modalPers = document.getElementById("myModal");
+var modalPers = document.getElementById("containerModal");
+var modalFijo = document.getElementById("myModal1");
 var persFilm = [];
 var url;      
 var loopPeople = 0;
+var datosCat=[];
 
 document.addEventListener("DOMContentLoaded", function(event) {
     console.log("pagina Cargada🤠");
@@ -23,7 +25,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
             url = "https://swapi.co/api/" + jitem +  "/";                     
             cargado = false;
             // llamo a obtener la info de la api con la url armada
-            getRequestCat(url, jitem);                                 
+            getRequestCat(url, jitem);                                                         
+            
         }
     });    
 });
@@ -61,19 +64,21 @@ function mostrarTabs(item, datosAPI)
 
 function mostrarCategoria(datosCategoria, htmlDivCategoria){
     console.log("*** Voy a mostrar Categoria General ***");
-    console.log(datosCategoria);
+    //console.log(datosCategoria);
     // Obtengo los resultados de la consulta
     var arrResults = datosCategoria.results;    
 
-    console.log(datosCategoria.results);
+    //console.log(datosCategoria.results);
     
     // Creo la row y la agrego al document
     var row = document.createElement("div");    
     row.setAttribute("class", "row");
     
     //Limpio el cuerpo de la tabla antes de cargar la nueva info
-    //htmlDivCategoria.innerHTML = "";
-    
+    if (!cargado) {
+        htmlDivCategoria.innerHTML = "";    
+    } 
+        
     //Recorro el Array de Resultados creando la card
         arrResults.forEach(elem =>{
             //console.log(elem.name);
@@ -129,6 +134,28 @@ function mostrarCategoria(datosCategoria, htmlDivCategoria){
                 }
               }
             
+              for (var i in elem) {
+                if (elem.hasOwnProperty(i)) {                                    
+
+                    if (((elem[i]).toString().substr(0,4) == 'http') && i != 'srcImg')                    
+                    {                        
+                        
+                        
+                        // Agrego los botones para la informacion adicional
+                        var btnPersonajes = document.createElement("input")
+                        btnPersonajes.setAttribute("value", i);            
+                        btnPersonajes.setAttribute("id", "Btn"+i);
+                        btnPersonajes.setAttribute("class", "btn btn-default btn-lg mt-4");
+                        btnPersonajes.setAttribute("data-toggle", "modal");
+                        btnPersonajes.setAttribute("data-target", "#myModal1");                        
+                                 
+                        // Agrego EventListener al boton
+                        btnPersonajes.addEventListener("click", CargarAdicional);   
+                        // Agrego el boton al card body
+                        card_body.appendChild(btnPersonajes);  
+                    }
+                }
+            }
             // Termino de Configurar la card           
             // Agrego el card body a la card
             card.appendChild(card_body);            
@@ -140,102 +167,44 @@ function mostrarCategoria(datosCategoria, htmlDivCategoria){
     htmlDivCategoria.appendChild(row);           
 }                                
 
+function CargarAdicional(event){
+    event.preventDefault();
+    //e.stopPropagation()
+    console.log("Voy a pedir la informacion adicional");        
+    // Voy a pedir la informacion adicional        
+    var jitem = "films";     
+    // armo la url del elemento seleccionado    
+    url = "https://swapi.co/api/" + jitem +  "/";                     
+    //cargado = false;    
 
-/* function mostrarFilms(datosCategoria){
-    console.log("*** Voy a mostrar Films ***");
-    console.log(datosCategoria);
-    // Ordeno los films por episodio id
-    var arrResults = datosCategoria.results;
-    arrResults.sort(function(a, b){return a.episode_id - b.episode_id});
-    //console.log(datosCategoria.results);
-    //console.log(elem.title);
-        // Creo la row y la agrego al document
-        var row = document.createElement("div");    
-        row.setAttribute("class", "row");
-        arrResults.forEach(elem =>{
-            // Creo la columna
-            var col = document.createElement("div");    
-            col.setAttribute("class", "col-sm-6");
-            // Creo la Card
-            var card = document.createElement("div");    
-            card.setAttribute("class", "card mb-4 mt-4 mx-auto");                 
-            // Asigno el Titulo
-            var title = document.createElement("h5");
-            var title_text = document.createTextNode(elem.title);
-            title.appendChild(title_text);
-            card.appendChild(title);            
-            // Creo el card body
-            var card_body = document.createElement("div");
-            card_body.setAttribute("class", "card-body");
-            // Asigno el Director Caption
-            var director_cap = document.createElement("h4");
-            var director_cap_text = document.createTextNode("Director: ");
-            director_cap.appendChild(director_cap_text);
-            card_body.appendChild(director_cap);
-            // Asigno el Director Text 
-            var director_name = document.createElement("p");
-            var director_name_text = document.createTextNode(elem.director);
-            director_name.appendChild(director_name_text);
-            card_body.appendChild(director_name);
-            //
-            // Asigno el Producer Caption
-            var producer_cap = document.createElement("h4");
-            var producer_cap_text = document.createTextNode("Producer: ");
-            producer_cap.appendChild(producer_cap_text);
-            card_body.appendChild(producer_cap);
-            // Asigno el producer Text 
-            var producer_name = document.createElement("p");
-            var producer_name_text = document.createTextNode(elem.producer);
-            producer_name.appendChild(producer_name_text);
-            card_body.appendChild(producer_name);
-            // Asigno el texto
-            var par = document.createElement("p");
-            var par_text = document.createTextNode(elem.opening_crawl);
-            par.appendChild(par_text);
-            card_body.appendChild(par);
-            // Asigno la imagen
-            var imag = document.createElement("img");
-            imag.setAttribute("class", "card-img-top");
-            imag.setAttribute("src", elem.srcImg);
-            imag.setAttribute("width", "80%");
-            imag.setAttribute("alt", "film image");
-             // Agrego la imagen al card body
-             card_body.appendChild(imag); 
-            // Agrego los botones para la informacion adicional
-            var btnPersonajes = document.createElement("input")
-            btnPersonajes.setAttribute("class", "btn btn-default disabled mt-4");
-            btnPersonajes.setAttribute("data-toggle", "modal");
-            //btnPersonajes.setAttribute("data-target", "#myModal");
-            btnPersonajes.setAttribute("value", "Personajes");            
-            btnPersonajes.setAttribute("id", "BtnPersonajes");         
-            // Agrego EventListener al boton
-            //btnPersonajes.addEventListener("click", funcLoadPersonajes);   
-            // Agrego el boton al card body
-            card_body.appendChild(btnPersonajes);  
-            // Agrego el card body a la card
-            card.appendChild(card_body);            
-            // Agrego la nueva card a la columna
-            col.appendChild(card);
-            // Agrego la columna al row
-            row.appendChild(col);        
-            // Cargo el array con la informacion de Personajes de la Pelicula            
-            persFilm = elem.characters;
-        });
-    // Agrego la row al contenido del tab
-    htmlDivFilms.appendChild(row);           
+    // Hago la llamada usando promises
+    getRequestPromise(url,jitem)
+    .then(function(datosCat){               
+        //console.log(datosCat);         
+        //  y muestro el contenido en el carrusel 
+        mostrarCarrusel(jitem, datosCat);           
+        
+    })
+    .catch(function(err){
+        console.log(err);
+    })
 }
 
-function funcLoadPersonajes(){
-    console.log("Voy a Mostrar los personajes");
-    console.log(persFilm);
-    //Creo los elementos del Modal
+function mostrarCarrusel(jitem, datosCat){
+    console.log("Voy a Mostrar el Contenido adicional");
+    console.log(jitem);
+    console.log(datosCat.results[0]);
     
-    // El Modal
+
+    //Creo los elementos del Modal    
+    // El Modal    
     var persModal = document.createElement("div");
-    persModal.setAttribute("class","modal");    
+    persModal.setAttribute("class","modal fade");    
+    persModal.setAttribute("id","myModal1");    
+    persModal.setAttribute("role","dialog");    
 
     var persModalDlg = document.createElement("div");
-    persModalDlg.setAttribute("class","modal-dialog"); 
+    persModalDlg.setAttribute("class","modal-dialog modal-lg"); 
     
     var persModalCtn = document.createElement("div");
     persModalCtn.setAttribute("class","modal-content"); 
@@ -251,49 +220,72 @@ function funcLoadPersonajes(){
     persModalCtn.appendChild(persModalHead);
 
     var persModalBdy = document.createElement("div");
-    persModalHead.setAttribute("class","modal-body"); 
+    persModalBdy.setAttribute("class","modal-body"); 
 
+    // Armo el carrusel para mostrar la info adicional    
     // Carrusel Slide
     var carSlide = document.createElement("div");
+    carSlide.setAttribute("id","myCarousel");
     carSlide.setAttribute("class","carousel slide");
     carSlide.setAttribute("data-ride","carousel");
+    carSlide.setAttribute("interval","1000");
+    
 
     // Carrusel Inner
     var carInner = document.createElement("div");
-    carInner.setAttribute("class","carousel-inner");     
+    carInner.setAttribute("class","carousel-inner");    
+    //carInner.setAttribute("role","listbox");    
 
-    persFilm.forEach(element => {        
-        console.log(element);
-        getRequestItem(element);                      
-        console.log(datosItem);
-        console.log(datosItem.srcImg);
-        console.log(datosItem.name);
+    // Cargo las imagenes segun la categoria                   
+    cargarImgCat(datosCat,jitem);
+
+    var arrResults;
+    
+    if (datosCat.results) {
+        arrResults = datosCat.results;
+    } else {
+        arrResults = datosCat;
+    }     
+
+    arrResults.forEach(element => {        
+        /* console.log(element);                            
+        console.log(element.srcImg);
+        console.log(element.title); */
                                                           
             // Creo el Carrusel Item    
             var carItem = document.createElement("div");
-            carItem.setAttribute("class","carousel-item");
+            carItem.setAttribute("class","item active");
              
             // Asigno la imagen
             var imag = document.createElement("img");
             imag.setAttribute("class", "d-block w-100");
-            imag.setAttribute("src", datosItem.srcImg);
-            imag.setAttribute("width", "80%");
+            imag.setAttribute("src", element.srcImg);            
+            imag.setAttribute("width", "50%");
             imag.setAttribute("alt", "film image");
             carItem.appendChild(imag);
 
-            // Asigno el Name Caption
+            // Creo el Carrusel Caption   
+            var carTitle = document.createElement("div");
+            carTitle.setAttribute("class","carousel-caption");
+            
+            // Asigno el Titulo
             var nameCap = document.createElement("h5");
             var nameCapText = document.createTextNode("Name: ");
             nameCap.appendChild(nameCapText);
-            carItem.appendChild(nameCap);
+            carTitle.appendChild(nameCap);
             // Asigno el Text 
             var textName = document.createElement("p");
-            var textNameContent = document.createTextNode(datosItem.name);
+            var textNameContent = document.createTextNode(element.title);            
             textName.appendChild(textNameContent);
-            carItem.appendChild(textName);            
+            carTitle.appendChild(textName);            
+
+            //Agrego el Titulo al Carrusel
+            carInner.appendChild(carTitle);   
 
             //Agrego el Item al Carrusel
-            carInner.appendChild(carItem);              
+            carInner.appendChild(carItem);            
+            
+
     }); 
 
     //Agrego el slide al carrusel
@@ -305,6 +297,13 @@ function funcLoadPersonajes(){
     persModalDlg.appendChild(persModalCtn)
     persModal.appendChild(persModalDlg);
 
+    //console.log(persModal);
     //Muestro el modal
-    persModal.show = true;
-}                 */
+    modalPers.appendChild(persModal);      
+    $("#myModal1").modal();
+
+
+}        
+
+
+
