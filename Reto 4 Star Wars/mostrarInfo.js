@@ -5,11 +5,10 @@ var htmlDivPlanets = document.getElementById("planets");
 var htmlDivSpecies = document.getElementById("species");
 var htmlDivStarships = document.getElementById("starships");
 var htmlDivVehicles = document.getElementById("vehicles");
-var modalPers = document.getElementById("containerModal");
 var modalFijo = document.getElementById("myModal1");
-var persFilm = [];
+var modalFijoTitle = document.getElementById("myModalTitle");
+var carInnerFijo = document.getElementById("carouselInner");
 var url;      
-var loopPeople = 0;
 var datosCat=[];
 
 document.addEventListener("DOMContentLoaded", function(event) {
@@ -140,7 +139,7 @@ function mostrarCategoria(datosCategoria, htmlDivCategoria){
                     if (((elem[i]).toString().substr(0,4) == 'http') && i != 'srcImg')                    
                     {                        
                         
-                        
+                        console.log(elem[i].toString());
                         // Agrego los botones para la informacion adicional
                         var btnPersonajes = document.createElement("input")
                         btnPersonajes.setAttribute("value", i);            
@@ -169,7 +168,7 @@ function mostrarCategoria(datosCategoria, htmlDivCategoria){
 
 function CargarAdicional(event){
     event.preventDefault();
-    //e.stopPropagation()
+    event.stopPropagation()
     console.log("Voy a pedir la informacion adicional");        
     // Voy a pedir la informacion adicional        
     var jitem = "films";     
@@ -191,50 +190,13 @@ function CargarAdicional(event){
 }
 
 function mostrarCarrusel(jitem, datosCat){
-    console.log("Voy a Mostrar el Contenido adicional");
+    console.log("Voy a Mostrar el Carrusel");
     console.log(jitem);
     console.log(datosCat.results[0]);
     
+    carInnerFijo.innerHTML = "";
 
-    //Creo los elementos del Modal    
-    // El Modal    
-    var persModal = document.createElement("div");
-    persModal.setAttribute("class","modal fade");    
-    persModal.setAttribute("id","myModal1");    
-    persModal.setAttribute("role","dialog");    
-
-    var persModalDlg = document.createElement("div");
-    persModalDlg.setAttribute("class","modal-dialog modal-lg"); 
-    
-    var persModalCtn = document.createElement("div");
-    persModalCtn.setAttribute("class","modal-content"); 
-    
-    var persModalHead = document.createElement("div");
-    persModalHead.setAttribute("class","modal-header"); 
-    
-    var persModalHeadTitle = document.createElement("div");
-    persModalHeadTitle.setAttribute("class","modal-title"); 
-    persModalHeadTitle.innerHTML = "Personajes";
-    
-    persModalHead.appendChild(persModalHeadTitle);
-    persModalCtn.appendChild(persModalHead);
-
-    var persModalBdy = document.createElement("div");
-    persModalBdy.setAttribute("class","modal-body"); 
-
-    // Armo el carrusel para mostrar la info adicional    
-    // Carrusel Slide
-    var carSlide = document.createElement("div");
-    carSlide.setAttribute("id","myCarousel");
-    carSlide.setAttribute("class","carousel slide");
-    carSlide.setAttribute("data-ride","carousel");
-    carSlide.setAttribute("interval","1000");
-    
-
-    // Carrusel Inner
-    var carInner = document.createElement("div");
-    carInner.setAttribute("class","carousel-inner");    
-    //carInner.setAttribute("role","listbox");    
+    modalFijoTitle.innerText = jitem;
 
     // Cargo las imagenes segun la categoria                   
     cargarImgCat(datosCat,jitem);
@@ -247,61 +209,46 @@ function mostrarCarrusel(jitem, datosCat){
         arrResults = datosCat;
     }     
 
+    var itActive = "carousel-item active";
     arrResults.forEach(element => {        
-        /* console.log(element);                            
-        console.log(element.srcImg);
-        console.log(element.title); */
-                                                          
+
             // Creo el Carrusel Item    
             var carItem = document.createElement("div");
-            carItem.setAttribute("class","item active");
-             
-            // Asigno la imagen
+            carItem.setAttribute("class",itActive);
+            itActive = "carousel-item";            
+
+            // Asigno la imagen            
             var imag = document.createElement("img");
             imag.setAttribute("class", "d-block w-100");
-            imag.setAttribute("src", element.srcImg);            
-            imag.setAttribute("width", "50%");
+            imag.setAttribute("src", element.srcImg);                        
             imag.setAttribute("alt", "film image");
             carItem.appendChild(imag);
 
             // Creo el Carrusel Caption   
             var carTitle = document.createElement("div");
             carTitle.setAttribute("class","carousel-caption");
-            
-            // Asigno el Titulo
+            carTitle.innerHTML = "";
+            // Asigno el Titulo            
             var nameCap = document.createElement("h5");
             var nameCapText = document.createTextNode("Name: ");
             nameCap.appendChild(nameCapText);
             carTitle.appendChild(nameCap);
+            
             // Asigno el Text 
-            var textName = document.createElement("p");
-            var textNameContent = document.createTextNode(element.title);            
-            textName.appendChild(textNameContent);
-            carTitle.appendChild(textName);            
-
+            var parrafo = document.createElement("p");                                                   
+            var contenido = document.createTextNode(element.title);                             
+            parrafo.appendChild(contenido);             
+            carTitle.appendChild(parrafo);         
+                                    
             //Agrego el Titulo al Carrusel
-            carInner.appendChild(carTitle);   
+            carItem.appendChild(carTitle);   
 
             //Agrego el Item al Carrusel
-            carInner.appendChild(carItem);            
+            carInnerFijo.appendChild(carItem);            
             
-
-    }); 
-
-    //Agrego el slide al carrusel
-    carSlide.appendChild(carInner);    
+    });   
     
-    // Agregp el carrusel al modal
-    persModalBdy.appendChild(carSlide);
-    persModalCtn.appendChild(persModalBdy);
-    persModalDlg.appendChild(persModalCtn)
-    persModal.appendChild(persModalDlg);
-
-    //console.log(persModal);
-    //Muestro el modal
-    modalPers.appendChild(persModal);      
     $("#myModal1").modal();
-
 
 }        
 
