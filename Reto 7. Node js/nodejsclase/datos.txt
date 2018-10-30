@@ -1,0 +1,5 @@
+nariz
+ojos
+orejas
+boca
+dientes

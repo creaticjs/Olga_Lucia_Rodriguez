@@ -1,0 +1,15 @@
+{
+  "name": "nodejsclase",
+  "version": "1.0.0",
+  "description": "Proyecto de Clase Bootcamp Creatic",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node emoji.js"
+  },
+  "author": "Olga Lucia Rodriguez",
+  "license": "ISC",
+  "dependencies": {
+    "node-emoji": "^1.8.1"
+  }
+}
